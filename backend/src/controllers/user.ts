@@ -14,7 +14,10 @@ export const create = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
-      user,
+      user: {
+        username: user.username,
+        id: user.id,
+      },
       token,
     });
   } catch (error) {
@@ -25,7 +28,8 @@ export const create = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
+
+    const user = await User.findOne({ username }).select("password username");
 
     if (!user) {
       return res.status(401).send({ message: "User not found" });
@@ -41,8 +45,11 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: "1d",
     });
 
-    res.status(200).json({
-      user,
+    return res.status(200).json({
+      user: {
+        username: user.username,
+        id: user.id,
+      },
       token,
     });
   } catch (error) {
