@@ -7,8 +7,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      minlength: 8,
-      maxlength: 20,
+      minlength: 4,
     },
     password: {
       type: String,
@@ -19,4 +18,4 @@ const userSchema = new mongoose.Schema(
   schemaOptions
 );
 
-module.exports = mongoose.model("User", userSchema);
+export = mongoose.model("User", userSchema);
