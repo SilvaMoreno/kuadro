@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { boardRoutes } from "./board";
 import { sessionRoutes } from "./session";
 import { userRoutes } from "./users";
 
@@ -10,5 +11,6 @@ routes.get("/", (req, res) => {
 
 routes.use("/users", userRoutes);
 routes.use("/sessions", sessionRoutes);
+routes.use("/boards", boardRoutes);
 
 export = routes;
