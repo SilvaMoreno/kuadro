@@ -7,7 +7,7 @@ const sessionRoutes = Router();
 
 sessionRoutes.post("/", ...loginValidator, validateBody, userController.login);
 
-sessionRoutes.get("/", ensureAuthenticated, (req, res) => {
+sessionRoutes.post("/verify", ensureAuthenticated, (req, res) => {
   res.status(200).json({
     user: {
       username: req.user.username,
