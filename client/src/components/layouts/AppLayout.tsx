@@ -1,12 +1,15 @@
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { setUser } from "../../redux/features/userSlice";
 import { authUtils } from "../../utils/auth";
 import { Loading } from "../common/Loading";
-import { Box } from "@mui/material";
 import { Sidebar } from "../common/Sidebar";
 
 export function AppLayout() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +19,7 @@ export function AppLayout() {
       if (!user) {
         navigate("/signin");
       } else {
+        dispatch(setUser(user));
         setLoading(false);
       }
     };
@@ -28,6 +32,7 @@ export function AppLayout() {
     <Box
       sx={{
         display: "flex",
+        height: "100vh",
       }}
     >
       <Sidebar />

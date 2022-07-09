@@ -1,14 +1,14 @@
-export type User = {
+export interface IUser {
   id: string;
   name: string;
   username: string;
-};
+}
 
 export type ResponseVerifyToken = {
-  user: User;
+  user: IUser;
 };
 
 export type ResponseUser = {
-  user: User;
+  user: IUser;
   token: string;
 };
