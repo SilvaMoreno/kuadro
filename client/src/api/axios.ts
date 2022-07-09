@@ -1,7 +1,8 @@
 import axios from "axios";
 import queryString from "query-string";
 
-const baseUrl = "http://localhost:3333/api/v1/";
+// const baseUrl = "http://localhost:3333/api/v1/";
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const getToken = () => localStorage.getItem("token");
 
