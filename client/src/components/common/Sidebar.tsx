@@ -9,7 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { boardApi } from "../../api/boarApi";
@@ -50,7 +55,28 @@ export function Sidebar() {
     navigate("/signin");
   };
 
-  const onDragEnd = () => {};
+  const onDragEnd = async ({ source, destination }: DropResult) => {
+    const newList = [...boards];
+    const [removed] = newList.splice(source.index, 1);
+    newList.splice(destination?.index ?? source.index, 0, removed);
+
+    const activeItem = newList.findIndex((item) => item.id === boardId);
+    setActiveIndex(activeItem);
+    dispatch(setBoards(newList));
+
+    try {
+      await boardApi.updatePosition({ boards: newList });
+    } catch (error) {}
+  };
+
+  const addBoard = async () => {
+    try {
+      const response = await boardApi.create();
+      const newBoards = [response.data, ...boards];
+      dispatch(setBoards(newBoards));
+      navigate(`/boards/${response.data.id}`);
+    } catch (error) {}
+  };
 
   return (
     <Drawer
@@ -121,7 +147,7 @@ export function Sidebar() {
               <Typography variant="body2" fontWeight="700">
                 Privates
               </Typography>
-              <IconButton onClick={() => {}}>
+              <IconButton onClick={addBoard}>
                 <AddBoxOutlined fontSize="small" />
               </IconButton>
             </Box>
@@ -129,7 +155,7 @@ export function Sidebar() {
 
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable
-              key={"list-board-droppable"}
+              key={"list-board-droppable-key"}
               droppableId="list-board-droppable"
             >
               {(provided) => (
@@ -170,6 +196,7 @@ export function Sidebar() {
                       )}
                     </Draggable>
                   ))}
+                  {provided.placeholder}
                 </div>
               )}
             </Droppable>

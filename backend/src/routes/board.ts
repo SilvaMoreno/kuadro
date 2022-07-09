@@ -6,5 +6,6 @@ const boardRoutes = Router();
 
 boardRoutes.post("/", ensureAuthenticated, boardController.create);
 boardRoutes.get("/", ensureAuthenticated, boardController.all);
+boardRoutes.put("/", ensureAuthenticated, boardController.updatePosition);
 
 export { boardRoutes };

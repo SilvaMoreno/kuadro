@@ -23,3 +23,23 @@ export const all = async (req: Request, res: Response) => {
     return res.status(500).send(error);
   }
 };
+
+export const updatePosition = async (req: Request, res: Response) => {
+  try {
+    const { boards } = req.body;
+
+    for (const key in boards.reverse()) {
+      const board = boards[key];
+
+      await Board.findByIdAndUpdate(board.id, {
+        $set: {
+          position: key,
+        },
+      });
+    }
+
+    return res.status(200).json({});
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
