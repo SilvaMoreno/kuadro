@@ -7,3 +7,8 @@ export type User = {
 export type ResponseVerifyToken = {
   user: User;
 };
+
+export type ResponseUser = {
+  user: User;
+  token: string;
+};

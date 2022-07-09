@@ -18,12 +18,12 @@ const createUserValidator = [
   body("confirmPassword")
     .isLength({ min: 4 })
     .withMessage("Confirm Password must be at least 4 characters"),
-  body("username").custom((value: string) => {
-    return User.findOne({ username: value }).then((user) => {
-      if (user) {
-        return Promise.reject("Username already used");
-      }
-    });
+  body("username").custom(async (value: string) => {
+    console.log("value", value);
+    const user = await User.findOne({ username: value });
+    if (user) {
+      return Promise.reject("Username already used");
+    }
   }),
 ];
 

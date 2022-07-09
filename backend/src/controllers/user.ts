@@ -33,13 +33,27 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ username }).select("password username");
 
     if (!user) {
-      return res.status(401).send({ message: "User not found" });
+      return res.status(401).json({
+        errors: [
+          {
+            param: "username",
+            msg: "Invalid username or password",
+          },
+        ],
+      });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return res.status(401).send({ message: "Invalid password" });
+      return res.status(401).json({
+        errors: [
+          {
+            param: "username",
+            msg: "Invalid username or password",
+          },
+        ],
+      });
     }
 
     const token = jwt.sign({ id: user.id }, String(process.env.JWT_SECRET), {
