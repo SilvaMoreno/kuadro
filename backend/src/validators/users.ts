@@ -2,6 +2,11 @@ import { body } from "express-validator";
 import User from "../models/user";
 
 const createUserValidator = [
+  body("name")
+    .isLength({ max: 20 })
+    .withMessage(
+      "Name must be less than 20 characters long and must not be empty"
+    ),
   body("username")
     .isLength({ min: 4, max: 20 })
     .withMessage(
