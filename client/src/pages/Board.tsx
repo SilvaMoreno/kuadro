@@ -102,6 +102,16 @@ export function Board() {
     }, timeout);
   };
 
+  const addFavorite = async () => {
+    if (!boardId || !board) {
+      return;
+    }
+    try {
+      boardApi.update(boardId, { favorite: !board.favorite });
+      setBoard({ ...board, favorite: !board.favorite });
+    } catch (error) {}
+  };
+
   return (
     <>
       <Box
@@ -112,7 +122,7 @@ export function Board() {
           width: "100%",
         }}
       >
-        <IconButton onClick={() => {}}>
+        <IconButton onClick={addFavorite}>
           {board?.favorite ? (
             <StarOutlined color="warning" />
           ) : (
