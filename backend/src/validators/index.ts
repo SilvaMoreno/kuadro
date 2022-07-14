@@ -5,6 +5,19 @@ import { validateGetBoardIbId, validateUpdateBoard } from "./board";
 import { loginValidator } from "./session";
 import { createUserValidator } from "./users";
 
+export {
+  validateCreateSection,
+  validateDeleteSection,
+  validateUpdateSection,
+} from "./section";
+export {
+  validateBody,
+  loginValidator,
+  createUserValidator,
+  validateGetBoardIbId,
+  validateUpdateBoard,
+};
+
 const validateBody = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
 
@@ -18,12 +31,4 @@ const validateBody = (req: Request, res: Response, next: NextFunction) => {
       msg: error.msg,
     })),
   });
-};
-
-export {
-  validateBody,
-  loginValidator,
-  createUserValidator,
-  validateGetBoardIbId,
-  validateUpdateBoard,
 };
