@@ -21,6 +21,7 @@ import { boardApi } from "../../api/boarApi";
 import { setBoards } from "../../redux/features/boardSlice";
 import { RootState } from "../../redux/store";
 import { colors } from "../../utils/colors";
+import { FavoriteList } from "./FavoriteList";
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -120,20 +121,7 @@ export function Sidebar() {
             paddingTop: "10px",
           }}
         >
-          <ListItem>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="body2" fontWeight="700">
-                Favorites
-              </Typography>
-            </Box>
-          </ListItem>
+          <FavoriteList />
 
           <ListItem>
             <Box

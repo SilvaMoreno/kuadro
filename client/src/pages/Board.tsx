@@ -13,10 +13,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { boardApi } from "../api/boarApi";
 import { EmojiPicker } from "../components/common/EmojiPicker";
 import { setBoards } from "../redux/features/boardSlice";
+import { setFavorites } from "../redux/features/favoriteSlice";
 import { RootState } from "../redux/store";
 import { IBoard } from "../utils/type";
 
@@ -25,8 +26,12 @@ const timeout = 1000;
 
 export function Board() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const boards = useSelector((state: RootState) => state.boards.value);
+  const favoritesBoards = useSelector(
+    (state: RootState) => state.favorites.value
+  );
 
   const { boardId } = useParams();
   const [board, setBoard] = useState<IBoard>();
@@ -49,11 +54,19 @@ export function Board() {
     if (!board) {
       return;
     }
+    setBoard({ ...board, icon });
 
     let tmp = [...boards];
     const index = tmp.findIndex((b) => b.id === board.id);
     tmp[index] = { ...tmp[index], icon };
-    setBoard({ ...board, icon });
+
+    if (board.favorite) {
+      let tmpFavorite = [...favoritesBoards];
+      const index = tmpFavorite.findIndex((b) => b.id === boardId);
+      tmpFavorite[index] = { ...tmpFavorite[index], icon };
+      dispatch(setFavorites(tmpFavorite));
+    }
+
     dispatch(setBoards(tmp));
 
     try {
@@ -70,11 +83,19 @@ export function Board() {
 
     clearTimeout(timer);
     const title = e.target.value;
+    setBoard({ ...board, title });
 
     let tmp = [...boards];
     const index = tmp.findIndex((b) => b.id === boardId);
     tmp[index] = { ...tmp[index], title };
-    setBoard({ ...board, title });
+
+    if (board.favorite) {
+      let tmpFavorite = [...favoritesBoards];
+      const index = tmpFavorite.findIndex((b) => b.id === boardId);
+      tmpFavorite[index] = { ...tmpFavorite[index], title };
+      dispatch(setFavorites(tmpFavorite));
+    }
+
     dispatch(setBoards(tmp));
 
     timer = setTimeout(() => {
@@ -108,7 +129,41 @@ export function Board() {
     }
     try {
       boardApi.update(boardId, { favorite: !board.favorite });
+
+      let newFavoriteList = [...favoritesBoards];
+      if (board.favorite) {
+        newFavoriteList = newFavoriteList.filter((e) => e.id !== boardId);
+      } else {
+        newFavoriteList.unshift(board);
+      }
+      dispatch(setFavorites(newFavoriteList));
+
       setBoard({ ...board, favorite: !board.favorite });
+    } catch (error) {}
+  };
+
+  const deleteBoard = async () => {
+    if (!boardId || !board) {
+      return;
+    }
+    try {
+      boardApi.delete(boardId);
+
+      if (board.favorite) {
+        const newFavoriteList = favoritesBoards.filter((e) => e.id !== boardId);
+        dispatch(setFavorites(newFavoriteList));
+      }
+
+      const newBoards = boards.filter((e) => e.id !== boardId);
+      dispatch(setBoards(newBoards));
+
+      setBoard({ ...board, favorite: !board.favorite });
+
+      if (newBoards.length === 0) {
+        navigate("/boards");
+      } else {
+        navigate("/boards/" + newBoards[0].id);
+      }
     } catch (error) {}
   };
 
@@ -130,7 +185,7 @@ export function Board() {
           )}
         </IconButton>
 
-        <IconButton color="error">
+        <IconButton color="error" onClick={deleteBoard}>
           <DeleteOutlined />
         </IconButton>
       </Box>

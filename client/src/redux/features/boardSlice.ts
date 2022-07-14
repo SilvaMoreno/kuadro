@@ -9,7 +9,7 @@ export interface UserState {
 const initialState: UserState = { value: [] };
 
 export const boardSlice = createSlice({
-  name: "user",
+  name: "boards",
   initialState,
   reducers: {
     setBoards: (state, action: PayloadAction<IBoard[]>) => {
