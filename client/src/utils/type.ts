@@ -13,6 +13,22 @@ export interface IBoard {
   position: number;
   favorite: boolean;
   favoritePosition: number;
+  sections?: ISection[];
+}
+
+interface ISection {
+  id: string;
+  board: string;
+  title: string;
+  tasks?: ITask[];
+}
+
+interface ITask {
+  id: string;
+  section: string;
+  title: string;
+  content: string;
+  position: number;
 }
 
 export type ResponseVerifyToken = {

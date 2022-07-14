@@ -1,10 +1,21 @@
-import mongoose from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import { schemaOptions } from "../utils/modelOptions";
 
-const boardSchema = new mongoose.Schema(
+interface IBoard extends Document {
+  user: Types.ObjectId;
+  icon: string;
+  title: string;
+  description: string;
+  position?: number;
+  favorite?: boolean;
+  favoritePosition?: number;
+  sections: any;
+}
+
+const boardSchema = new Schema<IBoard>(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -37,4 +48,4 @@ const boardSchema = new mongoose.Schema(
   schemaOptions
 );
 
-export = mongoose.model("Board", boardSchema);
+export = model<IBoard>("Board", boardSchema);

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 
+import { validateGetBoardIbId, validateUpdateBoard } from "./board";
 import { loginValidator } from "./session";
 import { createUserValidator } from "./users";
 
@@ -19,4 +20,10 @@ const validateBody = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export { validateBody, loginValidator, createUserValidator };
+export {
+  validateBody,
+  loginValidator,
+  createUserValidator,
+  validateGetBoardIbId,
+  validateUpdateBoard,
+};

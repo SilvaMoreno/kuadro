@@ -1,10 +1,16 @@
-import mongoose from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import { schemaOptions } from "../utils/modelOptions";
 
-const sectionSchema = new mongoose.Schema(
+interface ISection extends Document {
+  board: Types.ObjectId;
+  title: string;
+  tasks: any;
+}
+
+const sectionSchema = new Schema<ISection>(
   {
-    boards: {
-      type: mongoose.Schema.Types.ObjectId,
+    board: {
+      type: Schema.Types.ObjectId,
       ref: "Board",
       required: true,
     },
@@ -16,4 +22,4 @@ const sectionSchema = new mongoose.Schema(
   schemaOptions
 );
 
-export = mongoose.model("Section", sectionSchema);
+export = model<ISection>("Section", sectionSchema);

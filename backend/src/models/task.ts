@@ -1,10 +1,17 @@
-import mongoose from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import { schemaOptions } from "../utils/modelOptions";
 
-const taskSchema = new mongoose.Schema(
+interface ITask extends Document {
+  section: Types.ObjectId;
+  title: string;
+  content: string;
+  position: number;
+}
+
+const taskSchema = new Schema<ITask>(
   {
     section: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Section",
       required: true,
     },
@@ -23,4 +30,4 @@ const taskSchema = new mongoose.Schema(
   schemaOptions
 );
 
-export = mongoose.model("Task", taskSchema);
+export = model<ITask>("Task", taskSchema);

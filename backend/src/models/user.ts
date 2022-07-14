@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
 import { schemaOptions } from "../utils/modelOptions";
 
-const userSchema = new mongoose.Schema(
+interface IUser extends mongoose.Document {
+  name: string;
+  username: string;
+  password: string;
+}
+
+const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
       type: String,
@@ -22,4 +28,4 @@ const userSchema = new mongoose.Schema(
   schemaOptions
 );
 
-export = mongoose.model("User", userSchema);
+export = mongoose.model<IUser>("User", userSchema);

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Board from "../models/board";
+import Section from "../models/section";
+import Task from "../models/task";
 
 export const create = async (req: Request, res: Response) => {
   try {
@@ -39,6 +41,82 @@ export const updatePosition = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({});
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+export const one = async (req: Request, res: Response) => {
+  try {
+    const board = await Board.findById(req.params.boardId);
+
+    if (!board) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+
+    const sections = await Section.find({ board: board.id });
+
+    for (const section of sections) {
+      const tasks = await Task.find({ section: section.id })
+        .populate("section")
+        .sort("-position");
+      section.tasks = tasks;
+    }
+
+    board.sections = sections;
+
+    return res.status(200).json(board);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+export const update = async (req: Request, res: Response) => {
+  try {
+    const { boardId } = req.params;
+    const { title, description, favorite, icon } = req.body;
+
+    const board = await Board.findById(boardId);
+
+    if (!board) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+
+    let favoritePosition = 0;
+
+    if (favorite !== undefined && board.favorite !== favorite) {
+      const favorites = await Board.find({
+        user: board.user,
+        favorite: true,
+        _id: { $ne: boardId },
+      }).sort("favoritePosition");
+
+      if (favorite) {
+        const favoritesCount = favorites.length;
+        favoritePosition = favoritesCount > 0 ? favoritesCount : 0;
+      } else {
+        for (const index in favorites) {
+          const favorite = favorites[index];
+          await Board.findByIdAndUpdate(favorite.id, {
+            $set: {
+              favoritePosition: index,
+            },
+          });
+        }
+      }
+    }
+
+    const newBoard = await Board.findByIdAndUpdate(boardId, {
+      $set: {
+        title,
+        description,
+        favorite: !!favorite,
+        favoritePosition,
+        icon,
+      },
+    });
+
+    return res.status(200).json(newBoard);
   } catch (error) {
     return res.status(500).send(error);
   }
