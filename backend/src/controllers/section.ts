@@ -15,9 +15,9 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
-  const { boardId } = req.params;
+  const { sectionId } = req.params;
   try {
-    const section = await Section.findByIdAndUpdate(boardId, {
+    const section = await Section.findByIdAndUpdate(sectionId, {
       $set: {
         title: req.body.title ?? "Untitled",
       },

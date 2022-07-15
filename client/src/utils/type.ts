@@ -16,14 +16,14 @@ export interface IBoard {
   sections?: ISection[];
 }
 
-interface ISection {
+export interface ISection {
   id: string;
   board: string;
   title: string;
   tasks?: ITask[];
 }
 
-interface ITask {
+export interface ITask {
   id: string;
   section: string;
   title: string;

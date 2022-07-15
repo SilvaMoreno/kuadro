@@ -3,19 +3,13 @@ import {
   StarBorderOutlined,
   StarOutlined,
 } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { boardApi } from "../api/boarApi";
 import { EmojiPicker } from "../components/common/EmojiPicker";
+import { Kanban } from "../components/common/Kanban";
 import { setBoards } from "../redux/features/boardSlice";
 import { setFavorites } from "../redux/features/favoriteSlice";
 import { RootState } from "../redux/store";
@@ -224,19 +218,7 @@ export function Board() {
         />
 
         <Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button>Add Section</Button>
-            <Typography variant="body2" fontWeight="700">
-              {board?.sections?.length ?? 0} Sections
-            </Typography>
-          </Box>
-          <Divider sx={{ margin: "10px 0" }} />
+          <Kanban boardId={board?.id!} sections={board?.sections ?? []} />
         </Box>
       </Box>
     </>

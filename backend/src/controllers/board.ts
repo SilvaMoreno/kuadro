@@ -46,25 +46,32 @@ export const updatePosition = async (req: Request, res: Response) => {
 };
 
 export const one = async (req: Request, res: Response) => {
+  const { boardId } = req.params;
   try {
-    const board = await Board.findById(req.params.boardId);
+    const board = await Board.findById(boardId);
 
     if (!board) {
       return res.status(404).json({ message: "Board not found" });
     }
 
-    const sections = await Section.find({ board: board.id });
+    let currentBoard = {
+      ...board.toObject(),
+    };
 
-    for (const section of sections) {
+    const sections = await Section.find({ board: boardId });
+
+    currentBoard.sections = [...sections];
+
+    for (const section of currentBoard.sections) {
       const tasks = await Task.find({ section: section.id })
         .populate("section")
         .sort("-position");
       section.tasks = tasks;
     }
 
-    board.sections = sections;
+    currentBoard.sections = sections;
 
-    return res.status(200).json(board);
+    return res.status(200).json(currentBoard);
   } catch (error) {
     return res.status(500).send(error);
   }

@@ -8,7 +8,7 @@ import {
   validateUpdateSection,
 } from "../validators";
 
-const sectionRoutes = Router();
+const sectionRoutes = Router({ mergeParams: true });
 
 sectionRoutes.post(
   "/",
@@ -17,14 +17,14 @@ sectionRoutes.post(
   ensureAuthenticated,
   sectionController.create
 );
-sectionRoutes.post(
-  "/",
+sectionRoutes.put(
+  "/:sectionId",
   validateUpdateSection,
   validateBody,
   ensureAuthenticated,
   sectionController.update
 );
-sectionRoutes.post(
+sectionRoutes.delete(
   "/:sectionId",
   validateDeleteSection,
   validateBody,

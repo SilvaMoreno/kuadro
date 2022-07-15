@@ -1,12 +1,12 @@
 import { body, param } from "express-validator";
 
 const validateCreateSection = [
-  param("boardId", "Board id is required").isMongoId(),
+  param("boardId", "Board id is required!").isMongoId(),
 ];
 
 const validateUpdateSection = [
   param("boardId", "Board id is required").isMongoId(),
-  body("title").withMessage("Title is required"),
+  body("title").isLength({ min: 2 }).withMessage("Title is required"),
 ];
 
 const validateDeleteSection = [
